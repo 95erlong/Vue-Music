@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   export default {}
 </script>
 
@@ -28,7 +28,7 @@
       margin-top: 6px
       width: 30px
       height: 32px
-      marign-right: 9px
+      margin-right: 9px
       bg-image('logo')
       background-size: 30px 32px
     .text

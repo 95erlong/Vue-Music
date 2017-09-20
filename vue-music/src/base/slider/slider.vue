@@ -1,26 +1,21 @@
-<template lang="html">
+<template>
   <div class="slider" ref="slider">
     <div class="slider-group" ref="sliderGroup">
       <slot>
       </slot>
     </div>
     <div class="dots">
-      <span class="dot" v-for="(item, index) in dots" :class="{active:currentPageIndex === index}"></span>
+      <span class="dot" :class="{active: currentPageIndex === index }" v-for="(item, index) in dots"></span>
     </div>
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import {addClass} from 'common/js/dom'
   import BScroll from 'better-scroll'
 
   export default {
-    data() {
-      return {
-        dots: [],
-        currentPageIndex: 0
-      }
-    },
+    name: 'slider',
     props: {
       loop: {
         type: Boolean,
@@ -33,6 +28,12 @@
       interval: {
         type: Number,
         default: 4000
+      }
+    },
+    data() {
+      return {
+        dots: [],
+        currentPageIndex: 0
       }
     },
     mounted() {
@@ -54,6 +55,9 @@
         this.slider.refresh()
       })
     },
+    destroyed() {
+      clearTimeout(this.timer)
+    },
     methods: {
       _setSliderWidth(isResize) {
         this.children = this.$refs.sliderGroup.children
@@ -67,14 +71,10 @@
           child.style.width = sliderWidth + 'px'
           width += sliderWidth
         }
-
         if (this.loop && !isResize) {
           width += 2 * sliderWidth
         }
         this.$refs.sliderGroup.style.width = width + 'px'
-      },
-      _initDots() {
-        this.dots = new Array(this.children.length)
       },
       _initSlider() {
         this.slider = new BScroll(this.$refs.slider, {
@@ -100,6 +100,9 @@
           }
         })
       },
+      _initDots() {
+        this.dots = new Array(this.children.length)
+      },
       _play() {
         let pageIndex = this.currentPageIndex + 1
         if (this.loop) {
@@ -109,15 +112,12 @@
           this.slider.goToPage(pageIndex, 0, 400)
         }, this.interval)
       }
-    },
-    destroyed() {
-      clearTimeout(this.timer)
     }
   }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-  @import "~common/stylus/variable";
+  @import "~common/stylus/variable"
 
   .slider
     min-height: 1px
